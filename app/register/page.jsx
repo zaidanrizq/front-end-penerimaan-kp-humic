@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link";
 import RegisterForm from "@components/RegisterForm"
 
 const Register = () => {
@@ -64,6 +65,12 @@ const Register = () => {
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />
+            <div className="text-black font-inter font-normal text-[16px] text-center mt-[48px]">
+                Sudah memiliki akun?
+                <Link href="/login" className="text-primary hover:underline ml-1">
+                    Log In
+                </Link>
+            </div>
         </div>
     )
 };

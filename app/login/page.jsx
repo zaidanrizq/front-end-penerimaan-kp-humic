@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import LoginForm from "@components/LoginForm"
 
 const Login = () => {
@@ -69,6 +70,12 @@ const Login = () => {
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />
+            <div className="text-black font-inter font-normal text-[16px] text-center mt-[48px]">
+                Belum punya akun?
+                <Link href="/register" className="text-primary hover:underline ml-1">
+                    Register
+                </Link>
+            </div>
         </div>
     )
 }
