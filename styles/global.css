@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nav-white-btn {
+    @apply rounded-full border border-white bg-white py-2 px-8 text-primary text-center text-base font-workSans font-medium flex items-center justify-center;
+}
+
+.text-input {
+    @apply px-[16px] py-[8px] border border-[#D9E1EC] rounded-md focus:outline-none text-[16px] text-[#A1A7C4] focus:ring-1 focus:ring-primary focus:border-primary focus:text-black;
+}
+
+.accent-square-btn {
+    @apply px-[32px] py-[8px] mx-[500px] mt-[16px] bg-accent rounded-md font-workSans font-medium text-[16px] text-white;
+}
+
+.title-home {
+    font-size: 32px;
+}
+
+.margin-p-home {
+    margin: 124px 289px 124px 289px;
+}

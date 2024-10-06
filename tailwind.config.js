@@ -7,9 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        yesevaOne: ['Yeseva One', 'serif'],
+        workSans: ['Work Sans', 'sans-serif'],
+        inter: ['Inter', 'sans-serif']
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        'primary': '#B4252A',
+        'secondary': '#B4252A',
+        'accent': '#949597',
+        'black': '#212124'
       },
     },
   },
