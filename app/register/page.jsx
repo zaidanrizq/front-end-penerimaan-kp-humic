@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import RegisterForm from "@components/RegisterForm"
 
 const Register = () => {
+
+    const router = useRouter()
 
     const [data, setData] = useState({
         full_name: "",
@@ -41,6 +44,7 @@ const Register = () => {
 
             if (response.ok) {
                 alert('Registration successful!');
+                router.push('/login')
             } else {
                 alert(`Registration failed: ${responseData.message}`);
             }

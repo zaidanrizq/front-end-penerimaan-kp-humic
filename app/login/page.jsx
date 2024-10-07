@@ -44,9 +44,11 @@ const Login = () => {
 
                 localStorage.setItem('authToken', token)
 
+                alert('Log in successfull!')
+
                 router.push('/penerimaan_kp')
             } else {
-                alert(`Registration failed: ${responseData.message}`);
+                alert(`Log in failed: ${responseData.message}`);
             }
 
         } catch (error) {
