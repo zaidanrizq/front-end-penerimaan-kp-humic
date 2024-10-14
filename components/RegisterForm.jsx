@@ -82,7 +82,7 @@ const RegisterForm = ({ data, handleChange, handleSubmit }) => {
                 </div>
                 <button
                     type='submit'
-                    className='accent-square-btn'
+                    className='accent-square-btn mx-[500px]'
                 >
                     Register
                 </button>

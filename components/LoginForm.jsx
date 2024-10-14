@@ -30,7 +30,7 @@ const LoginForm = ({ data, handleChange, handleSubmit }) => {
                 </div>
                 <button
                     type='submit'
-                    className='accent-square-btn'
+                    className='accent-square-btn mx-[500px]'
                 >
                     Login
                 </button>

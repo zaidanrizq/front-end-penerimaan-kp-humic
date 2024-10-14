@@ -1,10 +1,11 @@
 import Link from "next/link"
+import Image from "next/image"
 
-const NavBar = () => {
+const UserNavBar = () => {
     return (
         <nav className="bg-primary flex flex-row justify-around items-center">
-            <div className="text-white font-workSans font-normal text-lg m-4">
-                <Link href="/" className="transition-all hover:text-accent ml-8 mr-4">
+            <div className="text-white font-workSans font-normal text-lg m-[20px]">
+                <Link href="/" className="transition-all hover:text-accent mr-4">
                     Home
                 </Link>
                 <Link href="" className="transition-all hover:text-accent mr-4">
@@ -17,16 +18,16 @@ const NavBar = () => {
                     Contact
                 </Link>
             </div>
-            <div className="flex flex-row m-4">
-                <Link href="/register" className="nav-white-btn mr-4">
-                    Register
-                </Link>
-                <Link href="/login" className="nav-white-btn mr-8">
-                    Log In
-                </Link>
-            </div>
+            <Link href="/profile">
+                <Image
+                    src="/assets/icons/profile.svg"
+                    alt="User"
+                    width={36}
+                    height={36}
+                />
+            </Link>
         </nav>
     )
 }
 
-export default NavBar
+export default UserNavBar

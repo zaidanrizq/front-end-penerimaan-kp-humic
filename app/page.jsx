@@ -4,7 +4,7 @@ import VerticalTimeline from "@components/VerticalTimeline";
 const Home = () => {
     return (
         <div>
-            <div className="flex justify-center">
+            <div className="flex justify-center ">
                 <Image
                     src="/assets/images/poster.svg"
                     alt="Poster"

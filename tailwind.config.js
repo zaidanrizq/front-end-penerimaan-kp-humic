@@ -10,7 +10,8 @@ module.exports = {
       fontFamily: {
         yesevaOne: ['Yeseva One', 'serif'],
         workSans: ['Work Sans', 'sans-serif'],
-        inter: ['Inter', 'sans-serif']
+        inter: ['Inter', 'sans-serif'],
+        merriweather: ['Merriweather', 'serif']
       },
       colors: {
         'primary': '#B4252A',

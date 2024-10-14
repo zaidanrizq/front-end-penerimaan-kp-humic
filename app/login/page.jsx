@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import LoginForm from "@components/LoginForm"
 
 const Login = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     const [data, setData] = useState({
         email: "",
@@ -13,6 +14,19 @@ const Login = () => {
     })
 
     const router = useRouter()
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken')
+
+        if (token) {
+            setIsLoggedIn(true)
+        }
+
+    }, [])
+
+    if (isLoggedIn) {
+        router.push('/')
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -45,8 +59,13 @@ const Login = () => {
                 localStorage.setItem('authToken', token)
 
                 alert('Log in successfull!')
+                                
+                router.push('/')
 
-                router.push('/penerimaan_kp')
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
+
             } else {
                 alert(`Log in failed: ${responseData.message}`);
             }
