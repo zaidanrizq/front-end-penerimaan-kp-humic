@@ -19,13 +19,13 @@ const Footer = () => {
                             Important Links
                         </h2>
                         <div className="flex flex-col font-workSans font-normal text-base text-white">
-                            <Link href="">
+                            <Link href="/penerimaan-magang" className="hover:text-accent">
                                 Penerimaan KP
                             </Link>
-                            <Link href="">
+                            <Link href="/contact" className="hover:text-accent">
                                 Contact
                             </Link>
-                            <Link href="">
+                            <Link href="/about-us" className="hover:text-accent">
                                 About Us
                             </Link>
                         </div>
@@ -35,10 +35,10 @@ const Footer = () => {
                             Contact Us
                         </h2>
                         <div className="flex flex-col font-workSans font-normal text-base text-white">
-                            <a href="mailto:humic@telkomuniversity.ac.id">
+                            <a href="mailto:humic@telkomuniversity.ac.id" className="hover:text-accent">
                                 Email: humic@telkomuniversity.ac.id
                             </a>
-                            <a href="https://maps.app.goo.gl/mMXbJDbWr3JjmYNr6">
+                            <a href="https://maps.app.goo.gl/mMXbJDbWr3JjmYNr6" className="hover:text-accent">
                                 Address: Telkom University
                             </a>
                         </div>
@@ -47,7 +47,7 @@ const Footer = () => {
                         <h2 className="font-workSans font-semibold text-lg text-white mb-[33.5px]">
                             Form Layanan Keluhan RC HUMIC:
                         </h2>
-                        <a href="https://bit.ly/Layanan_Keluhan_RCHUMIC" className="font-workSans font-normal text-base text-white">
+                        <a href="https://bit.ly/Layanan_Keluhan_RCHUMIC" className="font-workSans font-normal text-base text-white hover:text-accent hover:underline hover:decoration-accent">
                             https://bit.ly/Layanan_Keluhan_RCHUMIC
                         </a>
                     </div>

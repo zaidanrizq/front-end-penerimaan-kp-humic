@@ -8,13 +8,13 @@ const UserNavBar = () => {
                 <Link href="/" className="transition-all hover:text-accent mr-4">
                     Home
                 </Link>
-                <Link href="" className="transition-all hover:text-accent mr-4">
+                <Link href="/about-us" className="transition-all hover:text-accent mr-4">
                     About Us
                 </Link>
                 <Link href="/penerimaan-magang" className="transition-all hover:text-accent mr-4">
                     Penerimaan Magang
                 </Link>
-                <Link href="" className="transition-all hover:text-accent">
+                <Link href="/contact" className="transition-all hover:text-accent">
                     Contact
                 </Link>
             </div>

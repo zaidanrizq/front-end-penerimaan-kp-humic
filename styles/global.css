@@ -8,7 +8,7 @@
 @tailwind utilities;
 
 .nav-white-btn {
-    @apply rounded-full border border-white bg-white py-2 px-8 text-primary text-center text-base font-workSans font-medium flex items-center justify-center;
+    @apply rounded-full bg-white py-2 px-8 text-primary text-center text-base font-workSans font-medium flex items-center justify-center;
 }
 
 .text-input {

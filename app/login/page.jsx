@@ -6,6 +6,9 @@ import Link from "next/link"
 import LoginForm from "@components/LoginForm"
 
 const Login = () => {
+    const [showNotValid, setShowNotValid] = useState(false)
+    const [showError, setShowError] = useState(false)
+
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     const [data, setData] = useState({
@@ -16,13 +19,38 @@ const Login = () => {
     const router = useRouter()
 
     useEffect(() => {
-        const token = localStorage.getItem('authToken')
+        const checkAuth = async () => {
+            const REST_API_ENDPOINT = "http://localhost:5000/verify-token";
+            const token = localStorage.getItem('authToken');
 
-        if (token) {
-            setIsLoggedIn(true)
-        }
+            if (!token) {
+                return;
+            }
 
-    }, [])
+            try {
+                const response = await fetch(REST_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'authToken': token,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.valid) {
+                    return;
+                } else {
+                    
+                    setIsLoggedIn(true);
+                }
+            } catch (error) {
+                console.error("Error verifying token:", error);
+            }
+        };
+
+        checkAuth();
+    }, []);
 
     if (isLoggedIn) {
         router.push('/')
@@ -57,8 +85,6 @@ const Login = () => {
                 const { token } = responseData;
 
                 localStorage.setItem('authToken', token)
-
-                alert('Log in successfull!')
                                 
                 router.push('/')
 
@@ -67,12 +93,11 @@ const Login = () => {
                 }, 100);
 
             } else {
-                alert(`Log in failed: ${responseData.message}`);
+                setShowNotValid(true);
             }
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred during log in.');
+            setShowError(true);
         }
     }
 
@@ -88,6 +113,8 @@ const Login = () => {
             </div>
             <LoginForm
                 data={data}
+                showNotValid={showNotValid}
+                showError = {showError}
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />

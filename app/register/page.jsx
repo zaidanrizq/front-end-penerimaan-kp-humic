@@ -1,13 +1,52 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import RegisterForm from "@components/RegisterForm"
 
 const Register = () => {
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userExisted, setUserExisted] = useState(false)
+    const [showError, setShowError] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            const REST_API_ENDPOINT = "http://localhost:5000/verify-token";
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                return;
+            }
+
+            try {
+                const response = await fetch(REST_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'authToken': token,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.valid) {
+                    return;
+                } else {
+                    setIsLoggedIn(true);
+                }
+            } catch (error) {
+                console.error("Error verifying token:", error);
+            }
+        };
+
+        checkAuth();
+    }, []);
+
+    if (isLoggedIn) {
+        router.push('/')
+    }
 
     const [data, setData] = useState({
         full_name: "",
@@ -43,14 +82,12 @@ const Register = () => {
             const responseData = await response.json()
 
             if (response.ok) {
-                alert('Registration successful!');
-                router.push('/login')
+                router.push('/')
             } else {
-                alert(`Registration failed: ${responseData.message}`);
+                setUserExisted(true)
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred during registration.');
+            setShowError(true)
         }
     }
 
@@ -66,6 +103,8 @@ const Register = () => {
             </div>
             <RegisterForm 
                 data={data}
+                userExisted={userExisted}
+                showError={showError}
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
             />
