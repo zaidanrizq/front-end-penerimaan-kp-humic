@@ -20,7 +20,6 @@ const Login = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const REST_API_ENDPOINT = "http://localhost:5000/verify-token";
             const token = localStorage.getItem('authToken');
 
             if (!token) {
@@ -28,10 +27,10 @@ const Login = () => {
             }
 
             try {
-                const response = await fetch(REST_API_ENDPOINT, {
-                    method: 'POST',
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify-token`, {
+                    method: 'GET',
                     headers: {
-                        'authToken': token,
+                        "Authorization": `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -41,7 +40,6 @@ const Login = () => {
                 if (!response.ok || !data.valid) {
                     return;
                 } else {
-                    
                     setIsLoggedIn(true);
                 }
             } catch (error) {
@@ -65,12 +63,11 @@ const Login = () => {
     }
 
     const handleSubmit = async (e) => {
-        const REST_API_ENDPOINT = "http://localhost:5000/login"
 
         e.preventDefault()
 
         try {
-            const response = await fetch(REST_API_ENDPOINT, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

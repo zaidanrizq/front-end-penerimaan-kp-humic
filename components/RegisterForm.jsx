@@ -30,6 +30,19 @@ const RegisterForm = ({ data, userExisted, showError, handleChange, handleSubmit
                 </div>
                 <div className="flex flex-col px-[400px] mb-[32px]">
                     <label className="font-inter font-normal text-[14px] text-[#5A607F] mb-[8px]">
+                        Perguruan Tinggi
+                    </label>
+                    <input
+                        name="perguruan_tinggi"
+                        value={data.perguruan_tinggi}
+                        onChange={handleChange}
+                        type="text"
+                        required
+                        className="text-input"
+                    />
+                </div>
+                <div className="flex flex-col px-[400px] mb-[32px]">
+                    <label className="font-inter font-normal text-[14px] text-[#5A607F] mb-[8px]">
                         Prodi
                     </label>
                     <input
@@ -82,7 +95,7 @@ const RegisterForm = ({ data, userExisted, showError, handleChange, handleSubmit
                     {userExisted ? (
                         <div className="mt-[24px]">
                             <p className="font-inter font-normal text-red-500 text-[14px] text-center">
-                                User sudah teregistrasi.
+                                User dengan NIM atau Email tersebut sudah teregistrasi.
                             </p>
                         </div>
                     ) : null}

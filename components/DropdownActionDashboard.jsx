@@ -1,4 +1,4 @@
-const DropdownActionDashboard = ({link, isVisible, onClickDetail, onClickDelete}) => {
+const DropdownActionDashboard = ({isVisible, onClickDetail, onClickDelete}) => {
     return (
         <div
             className={`z-10 ${isVisible ? 'block' : 'hidden'} absolute bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700`}

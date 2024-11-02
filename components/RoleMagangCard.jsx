@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 import Image from "next/image";
+
 import AuthMagangModal from "./AuthMagangModal";
 
 const RoleMagangCard = ({role}) => {
@@ -12,7 +14,7 @@ const RoleMagangCard = ({role}) => {
 
     useEffect (() => {
         const checkAuth = async () => {
-            const REST_API_ENDPOINT = "http://localhost:5000/verify-token";
+            const REST_API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/verify-token`;
             const token = localStorage.getItem('authToken');
 
             if (!token) {
@@ -21,9 +23,9 @@ const RoleMagangCard = ({role}) => {
     
             try {
                 const response = await fetch(REST_API_ENDPOINT, {
-                    method: 'POST',
+                    method: 'GET',
                     headers: {
-                        'authToken': token,
+                        "Authorization": `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -42,16 +44,16 @@ const RoleMagangCard = ({role}) => {
         }
 
         checkAuth()
+
     }, [])
 
     return (
         <div className="flex flex-col justify-evenly w-[360px] h-[460px] border-2 rounded-lg border-primary/[.15] shadow-md hover:shadow-2xl transition-shadow duration-300">
             <div className="flex justify-center items-center h-full my-[16px]">
-                <Image
-                    src={role.image}
+                <img
+                    src={role.role_image}
                     alt={role.name}
-                    width={100}
-                    height={100}
+                    className="w-[250px] h-[250px] object-cover"
                 />
             </div>
             <div className="flex flex-col mx-[24px] mb-[24px] font-workSans">
@@ -64,7 +66,7 @@ const RoleMagangCard = ({role}) => {
                 { isLoggedIn ? (
                     <button 
                         className="w-[66px] flex flex-row items-center mt-[16px] ml-[16px] hover:underline hover:decoration-primary"
-                        onClick={() => router.push(`/penerimaan-magang/${role.slug}`)}
+                        onClick={() => router.push(`/penerimaan-magang/${role.role_id}`)}
                     >
                         <p className="font-normal text-[16px] text-primary">
                             Detail
@@ -94,21 +96,6 @@ const RoleMagangCard = ({role}) => {
                         />
                     </button>
                 )}
-                {/* <button 
-                    className="w-[66px] flex flex-row items-center mt-[16px] ml-[16px] hover:underline hover:decoration-primary"
-                    onClick={() => setShowModal(true)}
-                >
-                    <p className="font-normal text-[16px] text-primary">
-                        Detail
-                    </p>
-                    <Image
-                        src="/assets/icons/right-arrow.svg"
-                        alt="arrow"
-                        width={11}
-                        height={10}
-                        className="fill-accent ml-[8px]"
-                    />
-                </button> */}
             </div>
             <AuthMagangModal
                 show={showModal}

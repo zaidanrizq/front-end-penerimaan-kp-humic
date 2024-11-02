@@ -8,6 +8,9 @@ const LoggedInAdminNavBar = () => {
                 <Link href="/admin/dashboard/pelamar" className="transition-all hover:text-accent ml-8 mr-4">
                     Dashboard
                 </Link>
+                <Link href="/admin/dashboard/batch" className="transition-all hover:text-accent mr-4">
+                    Batch Magang
+                </Link>
                 <Link href="/admin/dashboard/posisi-magang" className="transition-all hover:text-accent mr-4">
                     Form Penerimaan Magang
                 </Link>

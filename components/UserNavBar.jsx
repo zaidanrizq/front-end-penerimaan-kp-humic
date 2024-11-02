@@ -1,7 +1,6 @@
 import Link from "next/link"
-import Image from "next/image"
 
-const UserNavBar = () => {
+const UserNavBar = ({profile_picture}) => {
     return (
         <nav className="bg-primary flex flex-row justify-around items-center">
             <div className="text-white font-workSans font-normal text-lg m-[20px]">
@@ -19,11 +18,10 @@ const UserNavBar = () => {
                 </Link>
             </div>
             <Link href="/profile">
-                <Image
-                    src="/assets/icons/profile.svg"
-                    alt="User"
-                    width={36}
-                    height={36}
+                 <img 
+                    src={profile_picture === null ? ("/assets/icons/profile.svg" ) : (profile_picture)}
+                    alt="Profile Icon" 
+                    className="w-[48px] h-[48px] rounded-full object-cover"
                 />
             </Link>
         </nav>
