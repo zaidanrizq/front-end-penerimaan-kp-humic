@@ -294,34 +294,6 @@ const DetailPosisiMagangPage = ({ params }) => {
                             />
                         </div>
                         <div className="flex flex-col justify-center items-left w-full gap-[8px]">
-                            <div className="flex flex-row items-center justify-left gap-[10px]">
-                                <label>Slug</label>
-                                <button 
-                                    onClick={() => setShowInfo(!showInfo)}
-                                    type="button"
-                                    className="mt-[3px]"
-                                >
-                                    <TfiInfoAlt 
-                                        className="w-[16px] h-[16px] hover:text-primary"
-                                    />
-                                </button>
-                            </div>
-                            <p className={`${showInfo ? "text-blac" : "hidden"} text-[14px]`}>
-                                    Slug adalah bagian dari URL yang mengidentifikasi halaman posisi magang tertentu.<br/>
-                                    Format : /posisi-magang/<span className="text-primary">[slug]</span> <br/>
-                                    Contoh : /posisi-magang/<span className="text-primary">devops-engineer</span> <br/>
-                                    (Berarti slug adalah "<span className="text-primary">devops-engineer</span>" tanpa tanda petik)
-                            </p>
-                            <input
-                                    name="slug"
-                                    value={role.slug}
-                                    onChange={handleChange}
-                                    type="text"
-                                    required
-                                    className="w-full px-[16px] py-[8px] border border-1 border-black rounded-md focus:outline-none text-[16px] text-black focus:ring-1 focus:ring-primary focus:border-primary focus:text-black;]"
-                            />
-                        </div>
-                        <div className="flex flex-col justify-center items-left w-full gap-[8px]">
                             <label>Deskripsi</label>
                             <textarea
                                 name="description"

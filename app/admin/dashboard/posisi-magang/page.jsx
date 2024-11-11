@@ -6,9 +6,12 @@ import DropdownActionDashboard from "@components/DropdownActionDashboard";
 import HapusModal from "@components/HapusModal";
 import GagalHapusLamaranModal from "@components/GagalHapusLamaranModal";
 import BerhasilHapusLamaranModal from "@components/BerhasilHapusLamaranModal";
+import DropdownBatch from "@components/DropdownBatch";
+
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { FaAngleDown } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
@@ -18,6 +21,15 @@ import { BsThreeDots } from "react-icons/bs";
 const DashboardPosisiMagang = () => {
 
     const router = useRouter()
+
+    const [isDropdownBatchVisible, setIsDropdownBatchVisible] = useState(false);
+    const [selectedBatch, setSelectedBatch] = useState('Batch');
+    const [batches, setBatches] = useState([]);
+
+    const handleSelectBatch = (batch) => {
+        setSelectedBatch(batch);
+        setIsDropdownBatchVisible(false)
+    }
 
     const status_magang = ['Dibuka', 'Ditutup']
     const [isDropdownStatusVisible, setIsDropdownStatusVisible] = useState(false)
@@ -171,6 +183,53 @@ const DashboardPosisiMagang = () => {
         fetchRolesKp();
     }, [router]);
 
+    useEffect(() => {
+
+        const fetchBatches = async () => {
+
+            const token = sessionStorage.getItem('authToken');
+
+            if (!token) {
+                router.push('/admin/login');
+                setTimeout(() => {
+                    location.reload()
+                }, 200);
+                return;
+            }
+
+            try {
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/batch`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    setBatches(result.data);
+                } else {
+                    throw new Error (result.message || "Error fetching batches.")
+                }
+
+            } catch (err) {
+
+                setError(err.message);
+
+            } finally {
+
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 200);
+
+            }
+        };
+
+        fetchBatches();
+    }, []);
+
     if (isLoading) {
         return <p>Loading...</p>
     }
@@ -179,14 +238,37 @@ const DashboardPosisiMagang = () => {
         return <p>Error: {error}</p>
     }
 
-    const filteredRoles = !selectedStatus || selectedStatus === "Status Magang"
-    ? roles
-    : roles.filter((role) => {
-        const now = new Date();
-        const isWithinRange = now >= new Date(role.batch.opened_at) && now <= new Date(role.batch.closed_at);
-        
-        return selectedStatus === "Dibuka" ? isWithinRange : !isWithinRange;
-    });
+    const filteredRoles = 
+    (!selectedStatus || selectedStatus === "Status Magang") &&
+    (!selectedBatch || selectedBatch === "Batch")
+        ? roles
+        : (selectedStatus !== "Status Magang") && (selectedBatch !== "Batch")
+        ? roles.filter((role) => {
+            const now = new Date();
+            const isWithinRange = now >= new Date(role.batch.opened_at) && now <= new Date(role.batch.closed_at);
+
+            return selectedStatus === "Dibuka" 
+                ? isWithinRange && role.batch.number === selectedBatch
+                : !isWithinRange && role.batch.number === selectedBatch;
+        })
+        : selectedStatus !== "Status Magang" && selectedBatch !== "Batch"
+        ? roles.filter((role) => {
+            const now = new Date();
+            const isWithinRange = now >= new Date(role.batch.opened_at) && now <= new Date(role.batch.closed_at);
+
+            return selectedStatus === "Dibuka" 
+                ? isWithinRange && role.batch.number === selectedBatch
+                : !isWithinRange && role.batch.number === selectedBatch;
+        })
+        : selectedStatus !== "Status Magang"
+        ? roles.filter((role) => {
+            const now = new Date();
+            const isWithinRange = now >= new Date(role.batch.opened_at) && now <= new Date(role.batch.closed_at);
+            return selectedStatus === "Dibuka" ? isWithinRange : !isWithinRange;
+        })
+        : selectedBatch !== "Batch"
+        ? roles.filter((role) => role.batch.number === selectedBatch)
+        : roles; // If none of the filters apply, return all roles
 
     return(
         <>
@@ -211,7 +293,25 @@ const DashboardPosisiMagang = () => {
                                 <tr className="text-center">
                                     <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300 hover:text-accent">Image</th>
                                     <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300 hover:text-accent">Posisi</th>
-                                    <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300 hover:text-accent">Batch</th>
+                                    <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300">
+                                        <button 
+                                            className="inline-flex items-center hover:text-accent"
+                                            type="button"
+                                            onClick={() => setIsDropdownBatchVisible(!isDropdownBatchVisible)}
+                                        >
+                                            {selectedBatch}
+                                            { isDropdownBatchVisible ? (
+                                                <FaAngleUp className="ml-[8px] w-[15px] h-[15px]"/>
+                                            ) : (
+                                                <FaAngleDown className="ml-[8px] w-[15px] h-[15px]"/>
+                                            )}
+                                        </button>
+                                        <DropdownBatch 
+                                            batches={batches}
+                                            isVisible={isDropdownBatchVisible}
+                                            onSelect={handleSelectBatch}
+                                        />
+                                    </th>
                                     <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300 hover:text-accent">Deskripsi</th>
                                     <th className="font-normal text-[18px] py-[8px] px-[24px] border-gray-300 hover:text-accent w-[205px]">
                                         <button 
@@ -250,7 +350,11 @@ const DashboardPosisiMagang = () => {
                                             />
                                         </td>
                                         <td className="px-[24px] py-[20px] w-[215px]">{role.name}</td>
-                                        <td className="px-[24px] py-[20px]"> {role.batch.number}</td>
+                                        <td className="px-[24px] py-[20px]"> 
+                                            <Link href={`/admin/dashboard/batch/detail/${role.batch.batch_id}`}>
+                                                {role.batch.number}
+                                            </Link>
+                                        </td>
                                         <td className="px-[24px] py-[20px] text-left">{role.description}</td>
                                         <td className="pl-[40px] py-[20px]">
                                             <div 

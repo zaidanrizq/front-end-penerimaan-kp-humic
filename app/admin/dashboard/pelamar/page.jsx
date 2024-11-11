@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import Link from "next/link";
 
 import SubHead from "@components/SubHead";
 import DropDownPosisi from "@components/DropDownPosisi";
@@ -17,33 +16,6 @@ import BerhasilHapusLamaranModal from "@components/BerhasilHapusLamaranModal";
 import { FaAngleDown } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
 import { BsThreeDots } from "react-icons/bs";
-
-/* const exportToPDF = () => {
-    const table = document.getElementById('applicationTable'); // Ensure your table has this ID
-    
-    html2canvas(table).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const imgWidth = 500;
-        const pageHeight = 800;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        pdf.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
-
-        pdf.save('applications.pdf');
-    });
-}; */
-
 
 const DashboardPelamar = () => {
     
@@ -438,8 +410,16 @@ const DashboardPelamar = () => {
                                         className={`text-center text-black border-2 border-gray-100 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}`}
                                     >
                                         <td className="px-[24px] py-[20px] ">{application.user.full_name}</td>
-                                        <td className="px-[24px] py-[20px] ">{application.kp_role.name}</td>
-                                        <td className="px-[24px] py-[20px] ">{application.kp_role.batch.number}</td>
+                                        <td className="px-[24px] py-[20px] ">
+                                            <Link href={`/admin/dashboard/posisi-magang/detail/${application.kp_role.role_id}`}>
+                                                {application.kp_role.name}
+                                            </Link>
+                                        </td>
+                                        <td className="px-[24px] py-[20px] ">
+                                            <Link href={`/admin/dashboard/batch/detail/${application.kp_role.batch.batch_id}`}>
+                                                {application.kp_role.batch.number}
+                                            </Link>
+                                        </td>
                                         <td className="px-[24px] py-[20px] hover:underline underline-offset-4">
                                             <a 
                                                 href={`${application.user.cv}`}

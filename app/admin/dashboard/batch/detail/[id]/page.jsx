@@ -7,6 +7,9 @@ import SubHead from "@components/SubHead";
 import ErrorModal from "@components/ErrorModal";
 import BerhasilEditBatchModal from "@components/BerhasilEditBatchModal";
 
+import { FaAngleDown } from "react-icons/fa6";
+import { FaAngleUp } from "react-icons/fa6";
+
 import Datepicker from "react-tailwindcss-datepicker";
 
 
@@ -14,6 +17,8 @@ const DetailBatch = ({ params }) => {
 
     const router = useRouter();
     const id = params.id
+
+    const statusPengumumanPenerimaan = [false, true]
 
     const [batch, setBatch] = useState({});
     const [date, setDate] = useState({
@@ -23,6 +28,8 @@ const DetailBatch = ({ params }) => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('Pilih Status')
+    const [showDropdown, setShowDropdown] = useState(false)
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
@@ -39,8 +46,19 @@ const DetailBatch = ({ params }) => {
         
         setDate(newDate);
 
-        const openedAt = newDate.startDate ? newDate.startDate.toISOString() : null;
-        const closedAt = newDate.endDate ? newDate.endDate.toISOString() : null;
+        let openedAt = null;
+        if (newDate.startDate) {
+            const startDate = new Date(newDate.startDate);
+            startDate.setHours(0, 0, 0, 0); // Set to 23:59:59.999 for the end of the day
+            openedAt = startDate.toISOString();
+        }
+
+        let closedAt = null;
+        if (newDate.endDate) {
+            const endDate = new Date(newDate.endDate);
+            endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999 for the end of the day
+            closedAt = endDate.toISOString();
+        }
 
         handleChange({
             target: {
@@ -55,7 +73,24 @@ const DetailBatch = ({ params }) => {
                 value: closedAt
             }
         });
-    }; 
+    };
+
+    const handleStatusChange = (status) => {
+
+        setSelectedStatus(status);
+
+        const selectionAnnouncment = status;
+
+        handleChange({
+            target: {
+                name: 'selection_announcement',
+                value: selectionAnnouncment
+            }
+        });
+
+        setShowDropdown(false);
+
+    };
 
     const handleSimpan = async (e) => {
 
@@ -173,6 +208,7 @@ const DetailBatch = ({ params }) => {
                         startDate: result.data.opened_at ? new Date(result.data.opened_at) : null,
                         endDate: result.data.closed_at ? new Date(result.data.closed_at) : null
                     })
+                    setSelectedStatus(result.data.selection_announcement);
                 } else {
                     throw new Error( result.message || "Failed to fetch batch.")
                 }
@@ -253,6 +289,48 @@ const DetailBatch = ({ params }) => {
                                     value={date} 
                                     onChange={newValue => handleDateChange(newValue)}
                                 />
+                            </div>
+                        </div>
+                        <div className="relative flex flex-col justify-center items-start w-full gap-[8px]">
+                            <label>Status Pengumuman Penerimaan</label>
+                            <div className="flex flex-col outline outline-[1px] rounded-md">
+                                <button 
+                                    type="button"
+                                    className="flex flex-row justify-start items-center w-full px-4 py-2"
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                >
+                                    {selectedStatus ? "Diumumkan" : "Belum Diumumkan"}
+                                    {
+                                        showDropdown 
+                                        ?
+                                        (
+                                            <FaAngleUp
+                                                className="ml-[8px] text-accent"
+                                            />
+                                        )
+                                        :
+                                        (
+                                            <FaAngleDown
+                                                className="ml-[8px] text-accent"
+                                            />
+                                        )
+                                    }
+                                </button>
+                            </div>
+                            <div className={`z-10 ${showDropdown ? 'block' : 'hidden'} absolute top-full left-0 bg-white min-w-[275px] mt-[4px] rounded-md shadow-lg`}>
+                                <ul className="text-[14px] text-gray-700 dark:text-gray-200">
+                                    {statusPengumumanPenerimaan.map((status, index) => (
+                                        <li key={index}>
+                                            <button 
+                                                className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-left font-inter font-normal text-[14px] text-black"
+                                                type="button"
+                                                onClick={() => handleStatusChange(status)}
+                                            >
+                                                {status ? "Diumumkan" : "Belum Diumumkan" }
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between items-center text-white mt-[64px]">

@@ -42,6 +42,11 @@ const UbahProfileForm = ({ userData, application, handleChange, handleTarikLamar
         const file = e.target.files[0];
 
         if (file) {
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("The file size should not exceed 2 MB.");
+                return; // Exit the function if the file is too large
+            }
             
             setImageUrl(URL.createObjectURL(file));
 
@@ -63,6 +68,11 @@ const UbahProfileForm = ({ userData, application, handleChange, handleTarikLamar
         const file = e.target.files[0];
 
         if (file) {
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("The file size should not exceed 2 MB.");
+                return; // Exit the function if the file is too large
+            }
             
             setCVUrl(URL.createObjectURL(file))
 
@@ -80,15 +90,21 @@ const UbahProfileForm = ({ userData, application, handleChange, handleTarikLamar
         const file = e.target.files[0];
 
         if (file) {
-            
-            setPortfolioUrl(URL.createObjectURL(file))
 
-            handleChange({
-                target: {
-                    name: 'portfolio',
-                    value: file
-                }
-            });
+            if (file.size > 2 * 1024 * 1024) {
+                alert("The file size should not exceed 2 MB.");
+                return; // Exit the function if the file is too large
+            } else {
+            
+                setPortfolioUrl(URL.createObjectURL(file))
+
+                handleChange({
+                    target: {
+                        name: 'portfolio',
+                        value: file
+                    }
+                });
+            }
         }
 
     };

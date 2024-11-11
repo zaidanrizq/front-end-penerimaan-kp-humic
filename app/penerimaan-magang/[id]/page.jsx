@@ -38,7 +38,7 @@ const Page = ({ params }) => {
                 }, 200);
                 return;
             }
-    
+
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
                     method: 'GET',
@@ -47,9 +47,9 @@ const Page = ({ params }) => {
                         'Content-Type': 'application/json',
                     },
                 });
-    
+
                 const data = await response.json();
-    
+
                 if (!response.ok || !data.valid) {
                     localStorage.removeItem("authToken");
                     router.push("/login")
@@ -61,13 +61,13 @@ const Page = ({ params }) => {
                 }
             } catch (error) {
                 console.error("Error verifying token:", error);
-            } 
+            }
         }
 
         checkAuth();
 
         const fetchRole = async (id) => {
-            
+
             try {
 
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/role-kp/${id}`)
@@ -87,7 +87,7 @@ const Page = ({ params }) => {
                 } else {
                     throw new Error(result.message || "Failed to fetch roles KP.")
                 }
-            
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -98,7 +98,7 @@ const Page = ({ params }) => {
         };
 
         fetchRole(id);
-    },[router]);
+    }, [router]);
 
     if (isLoading) {
         return <p>Loading...</p>;
@@ -118,8 +118,8 @@ const Page = ({ params }) => {
         const optionalFields = ['profile_picture', 'portfolio', 'kp_application'];
 
         const missingFields = Object.keys(user)
-        .filter(key => !optionalFields.includes(key))
-        .filter(key => user[key] == null || user[key] == "");
+            .filter(key => !optionalFields.includes(key))
+            .filter(key => user[key] == null || user[key] == "");
 
         if (missingFields.length > 0) {
             setShowIsiProfileModal(true)
@@ -137,7 +137,7 @@ const Page = ({ params }) => {
 
             const roleId = role.role_id
 
-            const response = await fetch( `${process.env.NEXT_PUBLIC_API_URL}/application-kp`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application-kp`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -145,9 +145,9 @@ const Page = ({ params }) => {
                 },
                 body: JSON.stringify({ roleId })
             });
-    
+
             const result = await response.json();
-            
+
             if (response.ok) {
                 setShowConfirmModal(false);
                 setShowSuccessModal(true);
@@ -187,43 +187,51 @@ const Page = ({ params }) => {
                             <h3>Job Description</h3>
                             <p>{role.description}</p>
                         </div>
-                        <div className="flex flex-row font-workSans font-medium text-[16px] gap-[48px] mb-[16px]">
-                            <h3 className="w-[350px]">Kemampuan yang diperlukan</h3>
-                            <p>{role.kualifikasi}</p>
+                        <div className="flex flex-row justify-left font-workSans text-[16px] gap-x-[100px]">
+                            <h3 className="flex-shrink-0 font-medium">Periode Pendaftaran</h3>
+                            <p className="flex-grow font-normal">
+                                {`${new Date(role.batch.opened_at).toLocaleDateString('en-GB')} - ${new Date(role.batch.closed_at).toLocaleDateString('en-GB')}`}
+                            </p>
                         </div>
+                        <div className="flex flex-row justify-left font-workSans text-[16px] mb-[16px] gap-x-[32px]">
+                            <h3 className="flex-shrink-0 font-medium">Kemampuan yang diperlukan</h3>
+                            <p className="flex-grow font-normal">{role.kualifikasi}</p>
+                        </div>
+
+
                         {
                             !user.kp_application
-                            ?
-                            (
-                                <button 
-                                    className="accent-square-btn w-[150px] hover:bg-primary transition-all duration-300"
-                                    onClick={handleDaftar}
-                                >
-                                    Daftar
-                                </button>
-                            )
-                            :
-                            user.kp_application.role_id === role.role_id
-                            ?
-                            (
-                                <div className="flex flex-row justify-center items-center bg-accent hover:bg-primary rounded-lg max-w-[200px] gap-[8px] h-[42px]"> 
-                                    <p className="font-workSans font-normal text-[16px] text-white select-none"> 
-                                        Sudah Terdaftar
-                                    </p>
-                                    <FaCheck
-                                        className="text-white w-[16px] h-[16px]"
-                                    />
-                                </div>
-                            )
-                            :
-                            (
-                                <button 
-                                    className="accent-square-btn w-[150px] hover:bg-primary transition-all duration-300"
-                                    onClick={handleDaftar}
-                                >
-                                    Daftar
-                                </button>
-                            )
+                                ?
+                                (
+                                    <button
+                                        className="accent-square-btn w-[150px] hover:bg-primary transition-all duration-300"
+                                        onClick={handleDaftar}
+                                    >
+                                        Daftar
+                                    </button>
+                                )
+                                :
+                                user.kp_application.role_id === role.role_id
+                                    ?
+                                    (
+                                        <div className="flex flex-row justify-center items-center bg-accent hover:bg-primary rounded-lg max-w-[200px] gap-[8px] h-[42px]">
+                                            <p className="font-workSans font-normal text-[16px] text-white select-none">
+                                                Sudah Terdaftar
+                                            </p>
+                                            <FaCheck
+                                                className="text-white w-[16px] h-[16px]"
+                                            />
+                                        </div>
+                                    )
+                                    :
+                                    (
+                                        <button
+                                            className="accent-square-btn w-[150px] hover:bg-primary transition-all duration-300"
+                                            onClick={handleDaftar}
+                                        >
+                                            Daftar
+                                        </button>
+                                    )
                         }
                     </div>
                 </div>
@@ -243,7 +251,7 @@ const Page = ({ params }) => {
                 show={showSuccessModal}
                 onConfirm={() => location.reload()}
             />
-            <GagalDaftarMagangModal 
+            <GagalDaftarMagangModal
                 show={showFailedModal}
                 onConfirm={() => setShowFailedModal(false)}
             />

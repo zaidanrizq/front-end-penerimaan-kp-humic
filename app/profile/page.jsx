@@ -10,6 +10,7 @@ const Profile = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState({});
+  const [batch, setBatch] = useState({});
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,7 +29,7 @@ const Profile = () => {
     if (!token) {
       router.push("/login");
       setTimeout(() => {
-        location.reload()
+        location.reload();
       }, 200);
       return;
     }
@@ -38,8 +39,7 @@ const Profile = () => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -49,11 +49,11 @@ const Profile = () => {
           setUser(result.data);
         } else {
           if (response.status === 403) {
-              localStorage.removeItem("authToken");
-              router.push('/login');
-              setTimeout(() => {
-                location.reload()
-              }, 200);
+            localStorage.removeItem("authToken");
+            router.push("/login");
+            setTimeout(() => {
+              location.reload();
+            }, 200);
           }
           throw new Error(result.message || "Failed to fetch user data.");
         }
@@ -61,13 +61,70 @@ const Profile = () => {
         setError(err.message);
       } finally {
         setTimeout(() => {
-          setIsLoading(false)
-        }, 250)
+          setIsLoading(false);
+        }, 250);
       }
     };
 
     fetchUser();
-  }, [router]);
+  }, []);
+
+  useEffect(() => {
+
+    const fetchBatch = async () => {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        router.push("/login");
+        setTimeout(() => {
+          location.reload();
+        }, 200);
+        return;
+      }
+
+      if(!user.kp_application) {
+        return;
+      }
+
+      try {
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/application-kp/${user.kp_application.application_id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setBatch(result.data.kp_role.batch);
+        } else {
+          if (response.status === 403) {
+            localStorage.removeItem("authToken");
+            router.push("/login");
+            setTimeout(() => {
+              location.reload();
+            }, 200);
+          }
+          throw new Error(result.message || "Failed to fetch batch data.");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 250);
+      }
+    };
+
+    fetchBatch();
+  }, [user]); // Run fetchBatch only when user data is available
+
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -136,20 +193,26 @@ const Profile = () => {
                 <td className="pl-2 pb-[24px]">
                   <p 
                     className={
-                      !user.kp_application 
-                        ? "" 
-                        : `w-[100px] rounded-full text-center ${
-                            user.kp_application.status === "Proses" 
-                              ? "bg-accent" 
-                              : user.kp_application.status === "Lulus"
-                              ? "bg-[#2FB425]" 
-                              : user.kp_application.status === "Gagal" 
-                              ? "bg-white text-primary" 
-                              : ""
-                          }`
+                      user.kp_application
+                        ? batch.selection_announcement
+                          ? `w-[100px] rounded-full text-center ${
+                                user.kp_application.status === "Lulus"
+                                ? "bg-[#2FB425]"
+                                : user.kp_application.status === "Gagal"
+                                ? "bg-white text-primary"
+                                : ""
+                            }`
+                          : "w-[100px] rounded-full text-center bg-accent"
+                        : ""
                     }
                   >
-                    {user.kp_application?.status || "-"}
+                    {
+                      user.kp_application
+                        ? (batch.selection_announcement
+                          ? user.kp_application.status
+                          : "Proses")
+                        : "-"
+                    }
                   </p>
                 </td>
               </tr>
@@ -159,16 +222,16 @@ const Profile = () => {
                 <td className="pl-2 pb-[24px]">
                   {
                     user.portfolio ?
-                      ( <a 
+                      (<a
                         href={`${user.portfolio}`}
-                        target="_blank" 
+                        target="_blank"
                         rel="noopener noreferrer"
-                        className= "hover:underline underline-offset-4"
-                        >
-                          Click Here
-                        </a>
-                      ) : 
-                      ( "-" )
+                        className="hover:underline underline-offset-4"
+                      >
+                        Click Here
+                      </a>
+                      ) :
+                      ("-")
                   }
                 </td>
               </tr>
@@ -178,16 +241,16 @@ const Profile = () => {
                 <td className="pl-2 inline-block align-top">
                   {
                     user.portfolio ?
-                      ( <a 
+                      (<a
                         href={`${user.portfolio}`}
-                        target="_blank" 
+                        target="_blank"
                         rel="noopener noreferrer"
-                        className= "hover:underline underline-offset-4"
-                        >
-                          Click Here
-                        </a>
-                      ) : 
-                      ( "-" )
+                        className="hover:underline underline-offset-4"
+                      >
+                        Click Here
+                      </a>
+                      ) :
+                      ("-")
                   }
                 </td>
               </tr>

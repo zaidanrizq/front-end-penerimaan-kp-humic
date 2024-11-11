@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,9 +9,7 @@ import BerhasilTambahBatchModal from "@components/BerhasilTambahBatchModal";
 
 import Datepicker from "react-tailwindcss-datepicker";
 
-
 const TambahBatch = () => {
-
     const router = useRouter();
 
     const [batch, setBatch] = useState({
@@ -19,12 +17,12 @@ const TambahBatch = () => {
         semester: "",
         year: "",
         opened_at: null,
-        closed_at: null
+        closed_at: null,
     });
 
     const [date, setDate] = useState({
         startDate: null,
-        endDate: null
+        endDate: null,
     });
 
     const [loading, setLoading] = useState(true);
@@ -34,43 +32,52 @@ const TambahBatch = () => {
     const [errorTitle, setErrorTitle] = useState("");
 
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setBatch((prevBatch) => ({
             ...prevBatch,
-            [name]: value
+            [name]: value,
         }));
-    }
+    };
 
     const handleDateChange = (newDate) => {
-        
         setDate(newDate);
 
-        const openedAt = newDate.startDate ? newDate.startDate.toISOString() : null;
-        const closedAt = newDate.endDate ? newDate.endDate.toISOString() : null;
+        let openedAt = null;
+        if (newDate.startDate) {
+            const startDate = new Date(newDate.startDate);
+            startDate.setHours(0, 0, 0, 0); // Set to 23:59:59.999 for the end of the day
+            openedAt = startDate.toISOString();
+        }
+
+        let closedAt = null;
+        if (newDate.endDate) {
+            const endDate = new Date(newDate.endDate);
+            endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999 for the end of the day
+            closedAt = endDate.toISOString();
+        }
 
         handleChange({
             target: {
-                name: 'opened_at',
-                value: openedAt
-            }
+                name: "opened_at",
+                value: openedAt,
+            },
         });
 
         handleChange({
             target: {
-                name: 'closed_at',
-                value: closedAt
-            }
+                name: "closed_at",
+                value: closedAt,
+            },
         });
-    }; 
+    };
 
     const handleSimpan = async (e) => {
-
         e.preventDefault();
 
-        const token = sessionStorage.getItem('authToken');
-            
+        const token = sessionStorage.getItem("authToken");
+
         if (!token) {
-            router.push('/admin/login')
+            router.push("/admin/login");
             setTimeout(() => {
                 location.reload();
             }, 200);
@@ -78,14 +85,13 @@ const TambahBatch = () => {
         }
 
         try {
-
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/batch`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(batch)
+                body: JSON.stringify(batch),
             });
 
             const result = await response.json();
@@ -93,24 +99,21 @@ const TambahBatch = () => {
             if (response.ok) {
                 setShowSuccess(true);
             } else {
-                throw new Error( result.message || "Failed adding new batch.");
+                throw new Error(result.message || "Failed adding new batch.");
             }
-
         } catch (err) {
             setError(err.message);
-            setErrorTitle('Gagal Tambah Batch!')
+            setErrorTitle("Gagal Tambah Batch!");
             setShowError(true);
         }
     };
 
     useEffect(() => {
-
         const validateToken = async () => {
+            const token = sessionStorage.getItem("authToken");
 
-            const token = sessionStorage.getItem('authToken');
-            
             if (!token) {
-                router.push('/admin/login')
+                router.push("/admin/login");
                 setTimeout(() => {
                     location.reload();
                 }, 200);
@@ -118,27 +121,28 @@ const TambahBatch = () => {
             }
 
             try {
-
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify-token`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization' : `Bearer ${token}`
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/verify-token`,
+                    {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     }
-                });
+                );
 
                 const result = await response.json();
 
                 if (!response.ok || !result.valid) {
-                    sessionStorage.removeItem('authToken');
-                    router.push('/admin/login');
+                    sessionStorage.removeItem("authToken");
+                    router.push("/admin/login");
                     setTimeout(() => {
                         location.reload();
                     }, 200);
                 }
-
             } catch (err) {
                 setError(`Error: ${err.message}`);
-                setErrorTitle('Gagal Validasi Akun!')
+                setErrorTitle("Gagal Validasi Akun!");
                 setShowError(error);
             } finally {
                 setTimeout(() => {
@@ -148,11 +152,10 @@ const TambahBatch = () => {
         };
 
         validateToken();
-
     }, [router]);
 
     if (loading) {
-        return <p>Loading...</p>
+        return <p>Loading...</p>;
     }
 
     return (
@@ -167,11 +170,16 @@ const TambahBatch = () => {
                     <h1 className="font-workSans font-medium text-[26px] text-black text-center self-start">
                         {`Batch ${batch.number} Semester ${batch.semester} ${batch.year}`}
                     </h1>
-                    <form onSubmit={handleSimpan}  className="flex flex-col font-workSans font-normal text-[16px] text-black w-full gap-[24px]">
+                    <form
+                        onSubmit={handleSimpan}
+                        className="flex flex-col font-workSans font-normal text-[16px] text-black w-full gap-[24px]"
+                    >
                         <div className="flex flex-col gap-[8px]">
                             <label className="self-start">Nomor Batch</label>
-                            <p className="self-start text-[14px]">Berupa angka 0. Contoh: 2</p>
-                            <input 
+                            <p className="self-start text-[14px]">
+                                Berupa angka 0. Contoh: 2
+                            </p>
+                            <input
                                 name="number"
                                 type="number"
                                 min={1}
@@ -183,8 +191,10 @@ const TambahBatch = () => {
                         </div>
                         <div className="flex flex-col gap-[8px]">
                             <label className="self-start">Semester</label>
-                            <p className="self-start text-[14px]">Ganjil / Genap. Contoh: Ganjil</p>
-                            <input 
+                            <p className="self-start text-[14px]">
+                                Ganjil / Genap. Contoh: Ganjil
+                            </p>
+                            <input
                                 name="semester"
                                 type="text"
                                 value={batch.semester}
@@ -195,8 +205,10 @@ const TambahBatch = () => {
                         </div>
                         <div className="flex flex-col gap-[8px]">
                             <label className="self-start">Tahun</label>
-                            <p className="self-start text-[14px]">Berupa angka. Contoh: 2024</p>
-                            <input 
+                            <p className="self-start text-[14px]">
+                                Berupa angka. Contoh: 2024
+                            </p>
+                            <input
                                 name="year"
                                 type="text"
                                 value={batch.year}
@@ -208,9 +220,9 @@ const TambahBatch = () => {
                         <div className="flex flex-col gap-[8px]">
                             <label className="self-start">Periode</label>
                             <div className="outline outline-[1px] py-[2px] outline-slate-300 rounded-lg">
-                                <Datepicker 
-                                    value={date} 
-                                    onChange={newValue => handleDateChange(newValue)}
+                                <Datepicker
+                                    value={date}
+                                    onChange={(newValue) => handleDateChange(newValue)}
                                 />
                             </div>
                         </div>
@@ -218,7 +230,7 @@ const TambahBatch = () => {
                             <button
                                 className="bg-accent rounded-lg w-[256px] h-[42px] hover:bg-primary transition-all duration-300"
                                 type="button"
-                                onClick={() => router.push('/admin/dashboard/batch')}
+                                onClick={() => router.push("/admin/dashboard/batch")}
                             >
                                 Batal
                             </button>
@@ -241,11 +253,11 @@ const TambahBatch = () => {
             <BerhasilTambahBatchModal
                 show={showSuccess}
                 onConfirm={() => {
-                    router.push('/admin/dashboard/batch');
+                    router.push("/admin/dashboard/batch");
                 }}
             />
         </>
-    )
+    );
 };
 
 export default TambahBatch;

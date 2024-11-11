@@ -190,13 +190,14 @@ const DashboardBatch = () => {
                         <table className="w-full table-auto font-workSans text-white bg-primary rounded-xl border-collapse hover:shadow-xl transition-all duration-250">
                             <thead>
                                 <tr className="text-center">
-                                    <th colSpan="5" className="font-medium text-2xl pt-4 pb-2">Daftar Batch Magang</th>
+                                    <th colSpan="6" className="font-medium text-2xl pt-4 pb-2">Daftar Batch Magang</th>
                                 </tr>
                                 <tr>
                                     <th className="font-normal text-lg py-2 px-6 hover:text-accent">Batch</th>
                                     <th className="font-normal text-lg py-2 px-6 hover:text-accent">Semester</th>
                                     <th className="font-normal text-lg py-2 px-6 hover:text-accent">Tahun</th>
                                     <th className="font-normal text-lg py-2 px-6 hover:text-accent">Periode</th>
+                                    <th className="font-normal text-lg py-2 px-6 hover:text-accent">Release Pengumuman</th>
                                     <th className="font-normal text-lg py-2 px-6"></th>
                                 </tr>
                             </thead>
@@ -210,6 +211,7 @@ const DashboardBatch = () => {
                                         <td className="px-6 py-4">{batch.semester}</td>
                                         <td className="px-6 py-4">{batch.year}</td>
                                         <td className="px-6 py-4">{formatDate(batch.opened_at)} - {formatDate(batch.closed_at)}</td>
+                                        <td className="px-6 py-4">{batch.selection_announcement ? "Diumumkan" : "Belum Diumumkan"}</td>
                                         <td className="px-6 py-4">
                                             <button onClick={() => handleToggleAction(index)}>
                                                 <BsThreeDots className="w-6 h-6" />
